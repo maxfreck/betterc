@@ -69,7 +69,7 @@ struct File {
 		payload.count++;
 	}
 
-	///Ref. counting during structure assignation
+	///Ref. counting during structure assignment
 	ref typeof(this) opAssign(ref typeof(this) rhs)
 	{
 		this.payload = rhs.payload;
