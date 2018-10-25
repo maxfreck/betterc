@@ -77,14 +77,16 @@ struct Vector(T)
 
 	this(this) nothrow @nogc
 	{
-		payload.count++;
+		if (payload !is null)
+			payload.count++;
 	}
 
 	///Ref. counting during structure assignment
 	ref typeof(this) opAssign(ref typeof(this) rhs)
 	{
 		this.payload = rhs.payload;
-		payload.count++;
+		if (payload !is null)
+			payload.count++;
 
 		return this;
 	}
@@ -92,7 +94,7 @@ struct Vector(T)
 	~this() nothrow @nogc
 	{
 		//TODO: call elements destructors if present
-		if (--payload.count == 0) {
+		if (payload !is null && --payload.count == 0) {
 			free(payload.arr);
 			free(payload);
 		}
