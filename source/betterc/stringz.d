@@ -45,21 +45,23 @@ struct Stringz
 
 	this (this) nothrow @nogc
 	{
-		payload.count++;
+		if (payload !is null)
+			payload.count++;
 	}
 
 	///Ref. counting during structure assignment
 	ref typeof(this) opAssign()(auto ref typeof(this) rhs) nothrow @nogc
 	{
 		this.payload = rhs.payload;
-		payload.count++;
+		if (payload !is null)
+			payload.count++;
 		return this;
 	}
 
 	~this() nothrow @nogc
 	{
 		import core.stdc.stdlib: free;
-		if (--payload.count == 0) {
+		if (payload !is null && --payload.count == 0) {
 			free(payload.dst);
 			free(payload);
 		}

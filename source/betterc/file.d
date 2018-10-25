@@ -66,21 +66,23 @@ struct File {
 
 	this (this) nothrow @nogc
 	{
-		payload.count++;
+		if (payload !is null)
+			payload.count++;
 	}
 
 	///Ref. counting during structure assignation
 	ref typeof(this) opAssign(ref typeof(this) rhs)
 	{
 		this.payload = rhs.payload;
-		payload.count++;
+		if (payload !is null)
+			payload.count++;
 
 		return this;
 	}
 
 	~this() nothrow @nogc
 	{
-		if (--payload.count == 0) {
+		if (payload !is null && --payload.count == 0) {
 			this.close();
 			free(payload);
 		}
