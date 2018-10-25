@@ -1,4 +1,4 @@
-﻿/**
+/**
  * Betterc: Frequently used primitives suitable for use in the BetterC D subset.
  *
  * Copyright: Maxim Freck, 2018.
