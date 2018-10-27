@@ -11,7 +11,7 @@ module betterc.cppclass;
 import std.traits: ReturnType;
 
 /*******
- * Returns `true` if `T` is destructible with T.destructor() method.
+ * Returns `true` if `T` is destructible with `T.destructor()` method.
  * In other words tests whether `T` contains `void destructor()` method.
  * Please note: the parent destructor must be called explicitly.
  */
@@ -42,6 +42,10 @@ T cnew(T, Args...)(auto ref Args args)
 /*******
  * Calls the destructor of a previously malloc'd class and frees its memory
  *
+ * `__xdtor()` is non-virtual and non-@nogc
+ * so let's just use destructor() method
+ * before freing object's memory
+ *
  * Params:
  *  instance = Class instance
  */
@@ -49,11 +53,7 @@ void cdelete(T)(T instance)
 {
 	import core.stdc.stdlib: free;
 
-	// __xdtor() is non-virtual and non-@nogc
-	// so let's just use destructor() method
-	// before freing object's memory
 	static if(isDestructable!T) instance.destructor();
-
 	free(cast(void*)instance);
 }
 

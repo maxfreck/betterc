@@ -1,4 +1,4 @@
-﻿/**
+/**
  * Betterc: Frequently used primitives suitable for use in the BetterC D subset.
  *
  * Copyright: Maxim Freck, 2018.
@@ -64,13 +64,14 @@ struct File {
 		payload.count = 1;
 	}
 
+	///ditto
 	this (this) nothrow @nogc
 	{
 		if (payload !is null)
 			payload.count++;
 	}
 
-	///Ref. counting during structure assignation
+	///Ref. counting during structure assignment
 	ref typeof(this) opAssign(ref typeof(this) rhs)
 	{
 		this.payload = rhs.payload;
@@ -80,6 +81,9 @@ struct File {
 		return this;
 	}
 
+	/*******
+	* Destructor: frees all memory
+	*/
 	~this() nothrow @nogc
 	{
 		if (payload !is null && --payload.count == 0) {
@@ -101,7 +105,7 @@ struct File {
 	}
 
 	/*******
-	* Returns underlying FILE*
+	* Returns: underlying FILE*
 	*/
 	public FILE* stream() nothrow @nogc
 	{
@@ -115,7 +119,16 @@ struct File {
 		return payload.fd;
 	}
 
-	//---
+	/*******
+	* Reads up to count objects into the array buffer
+	*
+	* Params:
+	*  ptr   = pointer to the first object in the array to be read
+	*  size  = size of each object in bytes
+	*  nmemb = the number of the objects to be read
+	*
+	* Returns: number of objects read successfully
+	*/
 	public size_t read(void* ptr, size_t size, size_t nmemb) nothrow @nogc
 	{
 		return fread(ptr, size, nmemb, payload.fd);
@@ -124,12 +137,20 @@ struct File {
 	///ditto
 	public size_t read(T)(T[] buf) nothrow @nogc
 	{
-		//dbg("\nReading to ptr %u %u items of %u size\n", buf.ptr, buf.length, T.sizeof);
 		return read(buf.ptr, T.sizeof, buf.length);
 	}
 
 
-	///---
+	/*******
+	* Writes up to count binary objects from the given array buffer
+	*
+	* Params:
+	*  ptr   = pointer to the first object object in the array to be written
+	*  size  = size of each object in bytes
+	*  nmemb = the number of the objects to be read
+	*
+	* Returns: number of objects written successfully
+	*/
 	public size_t write(in void* ptr, size_t size, size_t nmemb) nothrow @nogc
 	{
 		return fwrite(ptr, size, nmemb, payload.fd);
@@ -188,6 +209,9 @@ struct File {
 	}
 	+++/
 
+	/*******
+	* Returns: the length of the FILE*
+	*/
 	public size_t length() nothrow @nogc
 	{
 		immutable auto seekSave = ftell(payload.fd);
@@ -197,26 +221,53 @@ struct File {
 		return fileSize;
 	}
 
+	/*******
+	* Returns: true if the end of the stream has been reached, otherwise false
+	*/
 	public bool eof() nothrow @nogc
 	{
 		return feof(payload.fd) > 0;
 	}
 
+	/*******
+	* Sets the file position indicator
+	*
+	* Params:
+	*  offset = number of characters to shift the position relative to origin
+	*  origin = position to which offset is added
+	*
+	* Returns: true upon success, false otherwise
+	*/
 	public bool seek(size_t offset, int origin) nothrow @nogc
 	{
 		return fseek(payload.fd, cast(int)offset, origin) == 0;
 	}
 
+	/*******
+	* Checks the stream for errors
+	*
+	* Returns: true if the file stream has errors occurred, ​false​ otherwise
+	*/
 	public bool error() nothrow @nogc
 	{
 		return ferror(payload.fd) > 0;
 	}
 
+	/*******
+	* Writes any unwritten data from the stream's buffer to the associated output device
+	*
+	* Returns: true on success
+	*/
 	public bool flush() nothrow @nogc
 	{
 		return fflush(payload.fd) == 0;
 	}
 
+	/*******
+	* Closes the file stream
+	*
+	* Returns: true on success
+	*/
 	public void close() nothrow @nogc
 	{
 		if (payload.fd == null) return;

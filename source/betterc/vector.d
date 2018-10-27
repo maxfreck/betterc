@@ -63,6 +63,7 @@ struct Vector(T)
 		push(src);
 	}
 
+	///ditto
 	private this(Payload* src, size_t a, size_t b) nothrow @nogc
 	{
 
@@ -75,13 +76,14 @@ struct Vector(T)
 		memcpy(payload.arr, src.arr+a, payload.length);
 	}
 
+	///ditto
 	this(this) nothrow @nogc
 	{
 		if (payload !is null)
 			payload.count++;
 	}
 
-	///Ref. counting during structure assignation
+	///Ref. counting during structure assignment
 	ref typeof(this) opAssign(ref typeof(this) rhs)
 	{
 		this.payload = rhs.payload;
@@ -91,6 +93,9 @@ struct Vector(T)
 		return this;
 	}
 
+	/*******
+	* Destructor: frees all memory
+	*/
 	~this() nothrow @nogc
 	{
 		//TODO: call elements destructors if present
@@ -135,7 +140,7 @@ struct Vector(T)
 	}
 
 	/*******
-	* Erases nth array element
+	* Erases nth vectorlement
 	*
 	* Params:
 	*  n = Element number
@@ -155,6 +160,9 @@ struct Vector(T)
 		return this;
 	}
 
+	/*******
+	* Trims the capacity of the vector to be the vector's current size.
+	*/
 	public ref typeof(this) trim()
 	{
 		payload.capacity = payload.length;
@@ -163,16 +171,25 @@ struct Vector(T)
 		return this;
 	}
 
+	/*******
+	* Returns: the current length of the vector
+	*/
 	public size_t length() const pure nothrow @nogc
 	{
 		return payload.length;
 	}
 
+	/*******
+	* Returns: the current capacity of the vector
+	*/
 	public size_t capacity() pure nothrow @nogc
 	{
 		return payload.capacity;
 	}
 
+	/*******
+	* The [] operator
+	*/
 	public auto ref T opIndex(in size_t id) pure nothrow @nogc
 	{
 		if (payload.length == 0) return T.init;
@@ -180,7 +197,7 @@ struct Vector(T)
 	}
 
 	/*******
-	* Appends a value to an array
+	* Appends a value to the vector
 	*
 	* Params:
 	*  rhs = The value to add
@@ -194,17 +211,10 @@ struct Vector(T)
 		return this;
 	}
 
-	private void grow() nothrow @nogc
-	{
-		payload.capacity = (payload.capacity * 3) / 2 + 1;
-		payload.arr = (cast(T*)realloc(payload.arr, T.sizeof*payload.capacity));
-	}
-
 	///ditto
 	public ref typeof(this) push(in T[] rhs) nothrow @nogc
 	{
 		foreach (v; rhs) push(v);
-
 		return this;
 	}
 
@@ -212,12 +222,17 @@ struct Vector(T)
 	public ref typeof(this) push(typeof(this) rhs) nothrow @nogc
 	{
 		foreach (v; rhs) push(v);
-
 		return this;
 	}
 
+	private void grow() nothrow @nogc
+	{
+		payload.capacity = (payload.capacity * 3) / 2 + 1;
+		payload.arr = (cast(T*)realloc(payload.arr, T.sizeof*payload.capacity));
+	}
+
 	/*******
-	* Removes the last element from an array
+	* Removes the last element from the vector
 	*/
 	public void pop() nothrow @nogc
 	{
@@ -225,7 +240,7 @@ struct Vector(T)
 	}
 
 	/*******
-	* Appends a value to an array using << operator
+	* Appends a value to the vector using << operator
 	*
 	* Params:
 	*  rhs = The value to add
@@ -252,13 +267,18 @@ struct Vector(T)
 
 
 	/*******
-	* The $ operator returns the length of the array
+	* The $ operator returns the length of the vector
 	*/
 	size_t opDollar() nothrow @nogc
 	{
 		return payload.length;
 	}
 
+	/*******
+	* The [a..b] operator returns the slice of the vector
+	*
+	* Returns: a new vector containing values from a to b
+	*/
 	public typeof(this) opSlice(size_t a, size_t b) nothrow @nogc
 	{
 		if (a > b) {
@@ -273,6 +293,9 @@ struct Vector(T)
 	}
 
 
+	/*******
+	* This method is used in foreach()
+	*/
 	int opApply(scope int delegate(ref T) nothrow @nogc dg) nothrow @nogc
 	{
 		int result = 0;
@@ -285,6 +308,7 @@ struct Vector(T)
 		return result;
 	}
 
+	///ditto
 	int opApply(scope int delegate(ref size_t, ref T) nothrow @nogc dg) nothrow @nogc
 	{
 		int result;
@@ -297,6 +321,9 @@ struct Vector(T)
 		return result;
 	}
 
+	/*******
+	* Returns: the pointer to the underlying array
+	*/
 	T* ptr() pure nothrow @nogc
 	{
 		return payload.arr;
