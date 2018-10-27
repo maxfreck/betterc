@@ -43,6 +43,7 @@ struct Stringz
 
 	}
 
+	///ditto
 	this (this) nothrow @nogc
 	{
 		if (payload !is null)
@@ -58,6 +59,9 @@ struct Stringz
 		return this;
 	}
 
+	/*******
+	* Destructor: frees all memory
+	*/
 	~this() nothrow @nogc
 	{
 		import core.stdc.stdlib: free;
@@ -67,17 +71,24 @@ struct Stringz
 		}
 	}
 
+	/*******
+	* Returns: immutable(char)* null terminated string
+	*/
 	pragma(inline)
 	T opCast(T:immutable(char)*)() pure nothrow @nogc
 	{
 		return *this;
 	}
 
+	///ditto
 	immutable(char)* opUnary(string s)() nothrow @nogc if (s == "*")
 	{
 		return cast(immutable(char)*)payload.dst;
 	}
 
+	/*******
+	* Returns: the length of the string
+	*/
 	immutable(size_t) length() nothrow @nogc
 	{
 		return payload.length;
