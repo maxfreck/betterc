@@ -1,0 +1,12 @@
+{
+	"name" : "io",
+	"description" : "I/O related stuff",
+	"sourcePaths": ["."],
+	"importPaths": ["."],
+	"targetType": "library",
+	"dflags" : ["-betterC"],
+
+	"dependencies" : {
+		"betterc:ds": "*"
+	}
+}

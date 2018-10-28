@@ -1,0 +1,8 @@
+{
+	"name" : "cppclass",
+	"description" : "C++ classes contruction and deconstruction",
+	"sourcePaths": ["."],
+	"importPaths": ["."],
+	"targetType": "library",
+	"dflags" : ["-betterC"]
+}
