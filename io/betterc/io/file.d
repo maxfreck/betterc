@@ -5,7 +5,7 @@
  * Authors:   Maxim Freck <maxim@freck.pp.ru>
  * License:   $(LINK2 http://www.boost.org/LICENSE_1_0.txt, Boost License 1.0)
  */
-module betterc.file;
+module betterc.io.file;
 
 /*******
  * Encapsulates a $(D FILE*).
@@ -13,7 +13,7 @@ module betterc.file;
 struct File {
 	private import core.stdc.stdio;//: SEEK_SET, SEEK_CUR, SEEK_END, FILE;
 	private import core.stdc.stdlib: malloc, free;
-	private import betterc.stringz: Stringz;
+	private import betterc.ds.stringz: Stringz;
 
 	/// Offset is relative to the beginning
 	enum seekSet = SEEK_SET;

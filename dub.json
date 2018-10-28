@@ -3,9 +3,21 @@
 	"description" : "Frequently used primitives suitable for use in the BetterC D subset",
 	"authors" : [ "Maxim Freck" ],
 	"license" : "BOOST-1.0",
-
 	"copyright": "Copyright © 2018, Maxim Freck",
+
+	"sourcePaths": ["."],
+	"importPaths": ["."],
+	"targetType": "library",
 	"dflags" : ["-betterC"],
-	"sourcePaths": ["source/"],
-	"targetType": "library"
+
+	"dependencies" : {
+		"betterc:cppclass": "*",
+		"betterc:ds": "*",
+		"betterc:io": "*"
+	},
+	"subPackages": [
+		"cppclass/",
+		"ds/",
+		"io/"
+	]
 }
