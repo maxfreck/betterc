@@ -31,7 +31,7 @@ struct Vector(T)
 	* Constructor
 	*
 	* Params:
-	*  n = Initial array capacity
+	*  n = Initial vector capacity
 	*/
 	this (size_t n) nothrow @nogc
 	{
@@ -47,8 +47,8 @@ struct Vector(T)
 	* Constructor
 	*
 	* Params:
-	*  src = Initial array values
-	*  n = Initial array capacity
+	*  src = Initial vector values
+	*  n = Initial vector capacity
 	*/
 	this(T[] src, size_t n = 0) nothrow @nogc
 	{
@@ -106,10 +106,10 @@ struct Vector(T)
 	}
 
 	/*******
-	* Shrinks array
+	* Shrinks vector
 	*
 	* Params:
-	*  len = New array size
+	*  len = New vector size
 	*/
 	public ref typeof(this) shrink(size_t len = 0) nothrow @nogc
 	{
@@ -130,7 +130,7 @@ struct Vector(T)
 	}
 
 	/*******
-	* Clears entire array
+	* Clears entire vector
 	*
 	*/
 	pragma(inline)
@@ -140,7 +140,7 @@ struct Vector(T)
 	}
 
 	/*******
-	* Erases nth vectorlement
+	* Erases nth vector element
 	*
 	* Params:
 	*  n = Element number
@@ -322,7 +322,7 @@ struct Vector(T)
 	}
 
 	/*******
-	* Returns: the pointer to the underlying array
+	* Returns: the pointer to the underlying vector
 	*/
 	T* ptr() pure nothrow @nogc
 	{
