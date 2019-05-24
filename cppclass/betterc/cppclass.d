@@ -30,7 +30,7 @@ T cnew(T, Args...)(auto ref Args args)
 	import core.stdc.stdlib: malloc;
 	import core.stdc.string: memcpy;
 
-	static immutable model = new T();
+	static immutable model = cast(immutable(T)) new T();
 	enum kTSize = __traits(classInstanceSize, T);
 	auto instance = cast(T)malloc(kTSize);
 	memcpy(cast(void*)instance, cast(void*)model, kTSize);
